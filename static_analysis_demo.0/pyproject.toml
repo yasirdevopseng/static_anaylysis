@@ -1,0 +1,68 @@
+[tool.ruff]
+# Same as Black
+line-length = 88
+indent-width = 4
+
+# Assume Python 3.8
+target-version = "py38"
+
+# Exclude a variety of commonly ignored directories
+exclude = [
+    ".git",
+    ".ruff_cache",
+    ".venv",
+    "venv",
+    "__pycache__",
+    "build",
+    "dist",
+]
+
+[tool.ruff.lint]
+# Enable a comprehensive set of rules
+select = [
+    "E",   # pycodestyle errors
+    "F",   # Pyflakes
+    "C90", # McCabe complexity
+    "B",   # flake8-bugbear
+    "S",   # flake8-bandit security
+    "N",   # pep8-naming
+    "COM", # flake8-commas
+    "ERA", # eradicate (commented out code)
+    "I",   # isort
+    "PIE", # flake8-pie
+    "PL",  # Pylint
+    "PT",  # flake8-pytest-style
+    "SIM", # flake8-simplify
+    "UP",  # pyupgrade
+    "RUF", # Ruff-specific rules
+]
+
+# Ignore return type annotations and the S603 subprocess warning
+ignore = ['S301', 'S605']
+
+
+# Allow unused variables when underscore-prefixed
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.lint.mccabe]
+# Flag code with a complexity higher than 8
+max-complexity = 8
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+# Ignore some errors in test files
+"tests/**/*.py" = ["S101", "E501"]
+
+[tool.ruff.lint.flake8-quotes]
+docstring-quotes = "double"
+inline-quotes = "single"
+
+# Configuration for Pylint-like checks
+#[tool.ruff.lint.pylint]
+#max-args = 5
+#max-branches = 8
+#max-returns = 3
+#max-statements = 25
+

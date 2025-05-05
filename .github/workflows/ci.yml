@@ -12,18 +12,17 @@ on:
 jobs:
   code-quality-check:
     runs-on: ubuntu-latest
-    container:
-      image: python:3.11  # Official image with Python preinstalled
     steps:
       - uses: actions/checkout@v3
         with:
           # Fetch full history for better analysis
           fetch-depth: 0
 
-     # - name: Set up Python
-      #  uses: actions/setup-python@v4
-       # with:
-        #  python-version: '3.11'
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
 
       - name: Install dependencies
         run: |

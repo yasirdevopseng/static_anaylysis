@@ -33,19 +33,19 @@ jobs:
       - name: Run Ruff on changed files
         run: |
           ruff check app
-        continue-on-error: true
+        #continue-on-error: true
       - name: Run Mypy on changed files
         run: |
           mypy app
-        continue-on-error: true
+        #continue-on-error: true
       - name: Run Bandit on changed files
         run: |
           bandit -r app
-        continue-on-error: true
+        #continue-on-error: true
       - name: Run Tests with Coverage
         run: |
           PYTHONPATH=. pytest --cov=app tests/ --cov-report=xml:coverage.xml
-        continue-on-error: true
+        #continue-on-error: true
       - name: Run SonarQube Scanner
         uses: SonarSource/sonarqube-scan-action@master
         env:

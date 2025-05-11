@@ -1,5 +1,4 @@
 name: CI Pipeline
-
 on:
   push:
     branches:
@@ -10,20 +9,24 @@ on:
     types:
       - opened
       - synchronize
-
 jobs:
   code-quality-check:
     runs-on: self-hosted
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # Fetch full history for better analysis
+          # Fetch full history for better analysis
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
 
       - name: Install dependencies
         run: |
-          # python -m pip install --upgrade pip
+          python -m pip install --upgrade pip
           pip install -r requirements-dev.txt
           pip install -e .
 
@@ -31,36 +34,34 @@ jobs:
         run: |
           ruff check app
         continue-on-error: true
-
       - name: Run Mypy on changed files
         run: |
           mypy app
         continue-on-error: true
-
       - name: Run Bandit on changed files
         run: |
           bandit -r app
         continue-on-error: true
-
       - name: Run Tests with Coverage
         run: |
           PYTHONPATH=. pytest --cov=app tests/ --cov-report=xml:coverage.xml
         continue-on-error: true
-
       - name: Run SonarQube Scanner
         uses: SonarSource/sonarqube-scan-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-
       - name: SonarQube Quality Gate Check
         uses: sonarsource/sonarqube-quality-gate-action@master
         timeout-minutes: 5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-# name: CI Pipeline
+
+# ========= approach 2
+#name: CI Pipeline
+
 # on:
 #   push:
 #     branches:
@@ -71,49 +72,50 @@ jobs:
 #     types:
 #       - opened
 #       - synchronize
+
 # jobs:
 #   code-quality-check:
 #     runs-on: self-hosted
-#     steps:
-#       - uses: actions/checkout@v3
-#         with:
-#           # Fetch full history for better analysis
-#           fetch-depth: 0
 
-#       - name: Set up Python
-#         uses: actions/setup-python@v5
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v3
 #         with:
-#           python-version: '3.11'
-      
+#           fetch-depth: 0  # Fetch full history for better analysis
 
 #       - name: Install dependencies
 #         run: |
-#           python -m pip install --upgrade pip
+#           # python -m pip install --upgrade pip
 #           pip install -r requirements-dev.txt
 #           pip install -e .
 
 #       - name: Run Ruff on changed files
 #         run: |
 #           ruff check app
-#         #continue-on-error: true
+#         continue-on-error: true
+
 #       - name: Run Mypy on changed files
 #         run: |
 #           mypy app
-#         #continue-on-error: true
+#         continue-on-error: true
+
 #       - name: Run Bandit on changed files
 #         run: |
 #           bandit -r app
-#         #continue-on-error: true
+#         continue-on-error: true
+
 #       - name: Run Tests with Coverage
 #         run: |
 #           PYTHONPATH=. pytest --cov=app tests/ --cov-report=xml:coverage.xml
-#         #continue-on-error: true
+#         continue-on-error: true
+
 #       - name: Run SonarQube Scanner
 #         uses: SonarSource/sonarqube-scan-action@master
 #         env:
 #           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 #           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 #           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
 #       - name: SonarQube Quality Gate Check
 #         uses: sonarsource/sonarqube-quality-gate-action@master
 #         timeout-minutes: 5

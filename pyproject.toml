@@ -65,7 +65,3 @@ inline-quotes = "single"
 #max-branches = 8
 #max-returns = 3
 #max-statements = 25
-
-[build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
